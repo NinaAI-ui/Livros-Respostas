@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livros de Respostas</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
+</head>
+<body>
+    <!-- Splash / Hero -->
+    <div class="hero-surface">
+        <div class="hero-blob blob-1"></div>
+        <div class="hero-blob blob-2"></div>
+        <div class="hero-blob blob-3"></div>
+
+        <header class="top-bar">
+            <div class="top-bar-leading">
+                <span class="material-symbols-rounded">auto_stories</span>
+                <h1 class="top-bar-title">Livros de Respostas</h1>
+            </div>
+            <div class="top-bar-actions">
+                <button class="icon-btn" id="themeToggle" aria-label="Alternar tema">
+                    <span class="material-symbols-rounded">dark_mode</span>
+                </button>
+            </div>
+        </header>
+
+        <section class="hero-content">
+            <div class="hero-chip-group">
+                <span class="chip chip-assist">
+                    <span class="material-symbols-rounded">school</span>
+                    Estudo
+                </span>
+                <span class="chip-connector"></span>
+                <span class="chip chip-assist">
+                    <span class="material-symbols-rounded">menu_book</span>
+                    Respostas
+                </span>
+                <span class="chip-connector"></span>
+                <span class="chip chip-assist">
+                    <span class="material-symbols-rounded">download</span>
+                    Downloads
+                </span>
+            </div>
+            <h2 class="hero-headline">Sua biblioteca de<br><span class="highlight">respostas</span> em um só lugar</h2>
+            <p class="hero-supporting">Importe, visualize e baixe seus PDFs de forma rápida e organizada.</p>
+
+            <div class="hero-actions">
+                <button class="fab-extended" id="importBtn">
+                    <span class="material-symbols-rounded">upload_file</span>
+                    Importar PDF
+                </button>
+                <input type="file" id="fileInput" accept=".pdf" multiple hidden>
+            </div>
+        </section>
+    </div>
+
+    <!-- Divider Expressive -->
+    <div class="section-divider">
+        <div class="divider-line"></div>
+        <div class="divider-chip-group">
+            <span class="divider-pill left-pill">
+                <span class="material-symbols-rounded">folder_open</span>
+                Meus Arquivos
+            </span>
+            <span class="divider-pill right-pill" id="countPill">
+                <span class="material-symbols-rounded">tag</span>
+                <span id="pdfCount">0</span> PDFs
+            </span>
+        </div>
+        <div class="divider-line"></div>
+    </div>
+
+    <!-- Search & Filter Bar -->
+    <div class="container">
+        <div class="search-filter-bar">
+            <div class="search-box">
+                <span class="material-symbols-rounded">search</span>
+                <input type="text" id="searchInput" placeholder="Buscar livros...">
+                <button class="icon-btn small clear-search" id="clearSearch" hidden>
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            <div class="filter-chips" id="filterChips">
+                <button class="chip chip-filter active" data-filter="all">
+                    <span class="material-symbols-rounded">apps</span>
+                    Todos
+                </button>
+                <button class="chip chip-filter" data-filter="recent">
+                    <span class="material-symbols-rounded">schedule</span>
+                    Recentes
+                </button>
+                <button class="chip chip-filter" data-filter="favorites">
+                    <span class="material-symbols-rounded">favorite</span>
+                    Favoritos
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Grid -->
+    <main class="container">
+        <div class="pdf-grid" id="pdfGrid">
+            <!-- Empty state -->
+            <div class="empty-state" id="emptyState">
+                <div class="empty-illustration">
+                    <span class="material-symbols-rounded">auto_stories</span>
+                </div>
+                <h3>Nenhum livro ainda</h3>
+                <p>Importe seus PDFs para começar a organizar sua biblioteca de respostas.</p>
+                <button class="btn-tonal" id="emptyImportBtn">
+                    <span class="material-symbols-rounded">upload_file</span>
+                    Importar primeiro PDF
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- PDF Viewer Modal -->
+    <div class="modal-overlay" id="viewerModal">
+        <div class="modal-surface">
+            <div class="modal-header">
+                <div class="modal-header-info">
+                    <span class="material-symbols-rounded">description</span>
+                    <h3 id="viewerTitle">Nome do PDF</h3>
+                </div>
+                <div class="modal-header-actions">
+                    <button class="icon-btn" id="viewerDownload" aria-label="Baixar">
+                        <span class="material-symbols-rounded">download</span>
+                    </button>
+                    <button class="icon-btn" id="viewerClose" aria-label="Fechar">
+                        <span class="material-symbols-rounded">close</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfFrame" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Snackbar -->
+    <div class="snackbar" id="snackbar">
+        <span class="material-symbols-rounded snackbar-icon">check_circle</span>
+        <span class="snackbar-text" id="snackbarText">PDF importado com sucesso!</span>
+        <button class="snackbar-action" id="snackbarAction">OK</button>
+    </div>
+
+    <!-- Delete Confirmation Dialog -->
+    <div class="dialog-overlay" id="deleteDialog">
+        <div class="dialog-surface">
+            <span class="material-symbols-rounded dialog-icon">delete_forever</span>
+            <h3>Remover PDF?</h3>
+            <p>Essa ação não pode ser desfeita. O arquivo será removido da sua biblioteca.</p>
+            <div class="dialog-actions">
+                <button class="btn-text" id="cancelDelete">Cancelar</button>
+                <button class="btn-tonal danger" id="confirmDelete">Remover</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-surface">
+        <p>Feito com <span class="material-symbols-rounded heart">favorite</span> Material 3 Expressive</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
